@@ -9,15 +9,20 @@ services:
       - MARIADB_USER=${DATABASE_USER}
       - MARIADB_PASSWORD=${DATABASE_PASSWORD}
       - MARIADB_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}
+      - MARIADB_AUTO_UPGRADE=1
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-innodb-adaptive-hash-index
+      - --innodb-buffer-pool-size=128M
     ports:
       - "3306:3306"
     restart: unless-stopped
     healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MARIADB_USER --password=$$MARIADB_PASSWORD
-      interval: 20s
-      start_period: 10s
-      timeout: 10s
-      retries: 3
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u$$MARIADB_USER", "-p$$MARIADB_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kimai:
     container_name: kimai-tracker-kimai
@@ -38,4 +43,6 @@ services:
 
 volumes:
   data:
+    driver: local
   mysql:
+    driver: local
