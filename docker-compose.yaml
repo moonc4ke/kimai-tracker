@@ -15,6 +15,7 @@ services:
       - --collation-server=utf8mb4_unicode_ci
       - --skip-innodb-adaptive-hash-index
       - --innodb-buffer-pool-size=128M
+      - --init-file=/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
     restart: unless-stopped
