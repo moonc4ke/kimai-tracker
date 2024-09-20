@@ -43,7 +43,7 @@ jobs:
               cd kimai-tracker
             fi
 
-      - name: Add Environment Variables to .env
+      - name: Run Docker Compose with Secrets
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.UBUNTU_SERVER_IP }}
@@ -51,21 +51,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/kimai-tracker
-            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" > .env
-            echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
-            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
-            echo "DATABASE_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> .env
-            echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
-            echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
-
-      - name: Stop and Run Docker Compose
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.UBUNTU_SERVER_IP }}
-          username: dondoncece
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            cd ~/kimai-tracker
+            DATABASE_NAME=${{ secrets.DATABASE_NAME }} \
+            DATABASE_USER=${{ secrets.DATABASE_USER }} \
+            DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+            DATABASE_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }} \
+            ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }} \
+            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }} \
             docker-compose down
             docker-compose up -d
 
