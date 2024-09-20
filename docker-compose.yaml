@@ -1,7 +1,7 @@
 services:
   sqldb:
     container_name: kimai-tracker-sqldb
-    image: mariadb:10.11
+    image: mariadb:latest
     volumes:
       - mysql:/var/lib/mysql
     environment:
