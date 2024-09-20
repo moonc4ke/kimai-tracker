@@ -13,6 +13,7 @@ services:
       - --default-storage-engine=innodb
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      - --bind-address=0.0.0.0
     ports:
       - "3306:3306"
     restart: unless-stopped
