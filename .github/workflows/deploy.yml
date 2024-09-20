@@ -51,12 +51,12 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ~/kimai-tracker
-            echo "DATABASE_NAME=${DATABASE_NAME}" > .env
-            echo "DATABASE_USER=${DATABASE_USER}" >> .env
-            echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> .env
-            echo "DATABASE_ROOT_PASSWORD=${DATABASE_ROOT_PASSWORD}" >> .env
-            echo "ADMIN_EMAIL=${ADMIN_EMAIL}" >> .env
-            echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" >> .env
+            echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" > .env
+            echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env
+            echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env
+            echo "DATABASE_ROOT_PASSWORD=${{ secrets.DATABASE_ROOT_PASSWORD }}" >> .env
+            echo "ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL }}" >> .env
+            echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
 
       - name: Stop and Run Docker Compose
         uses: appleboy/ssh-action@v0.1.5
