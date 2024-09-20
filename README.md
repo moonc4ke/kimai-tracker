@@ -70,6 +70,48 @@ cat ~/.ssh/id_ed25519.pub
 - Click **Add SSH key**.
 - Confirm your GitHub password if prompted.
 
+## Step 4: Install and Configure Caddy
+
+### Install Caddy
+
+```sh
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install -y caddy
+```
+
+### Configure Caddy
+
+```sh
+sudo nano /etc/caddy/Caddyfile
+```
+
+Add the following configuration:
+
+```caddyfile
+kimai.donce.dev {
+        tls adom.donatas@gmail.com
+        request_body {
+                max_size 100MB
+        }
+        reverse_proxy 127.0.0.1:8001
+}
+```
+
+**Restart Caddy:**
+
+```sh
+sudo systemctl restart caddy
+```
+
+Check the Caddy service status:
+
+```sh
+sudo systemctl status caddy
+```
+
 ## Step 4: Create Backup, List Backups, and Restore Scripts from backup-scripts folder
 
 1\. **Create `backup.sh` in the `~/` directory**:
