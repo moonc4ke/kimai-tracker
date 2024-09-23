@@ -74,4 +74,4 @@ rm -rf "var_$DATE"
 echo "Backup completed: kimai_backup_$DATE.tar.gz"
 
 # Remove backups older than 5 days
-find "$BACKUP_DIR" -name "kimai_backup_*.tar.gz" -type f -mtime +5 -delete
+find "/home/dondoncece/kimai-tracker/backups" -name "kimai_backup_*.tar.gz" -type f -mtime +5 -delete
