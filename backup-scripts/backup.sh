@@ -4,7 +4,7 @@
 if [ -f /home/dondoncece/kimai-tracker/.env ]; then
     set -o allexport
     source /home/dondoncece/kimai-tracker/.env
-    set -o allexport
+    set +o allexport
 else
     echo ".env file not found in the root directory."
     exit 1
@@ -30,12 +30,17 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-docker cp kimai-tracker-kimai:/opt/kimai/config/packages/local.yaml "$BACKUP_DIR/local_yaml_$DATE"
-if [ $? -ne 0 ]; then
+# Check if local.yaml exists before trying to copy
+if docker exec kimai-tracker-kimai test -f /opt/kimai/config/packages/local.yaml; then
+    docker cp kimai-tracker-kimai:/opt/kimai/config/packages/local.yaml "$BACKUP_DIR/local_yaml_$DATE"
+    if [ $? -ne 0 ]; then
+        echo "Failed to copy local.yaml file."
+        exit 1
+    fi
+    LOCAL_YAML_EXISTS=true
+else
     echo "local.yaml file not found, skipping."
     LOCAL_YAML_EXISTS=false
-else
-    LOCAL_YAML_EXISTS=true
 fi
 
 docker cp kimai-tracker-kimai:/opt/kimai/var "$BACKUP_DIR/var_$DATE"

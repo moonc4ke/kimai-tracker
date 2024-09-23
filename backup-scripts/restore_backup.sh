@@ -4,7 +4,7 @@
 if [ -f /home/dondoncece/kimai-tracker/.env ]; then
     set -o allexport
     source /home/dondoncece/kimai-tracker/.env
-    set -o allexport
+    set +o allexport
 else
     echo ".env file not found in the root directory."
     exit 1
