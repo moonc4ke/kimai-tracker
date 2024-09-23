@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BACKUP_DIR="./backups"
+BACKUP_DIR="/home/dondoncece/kimai-tracker/backups"
 
 echo "Available backups:"
 echo "----------------"

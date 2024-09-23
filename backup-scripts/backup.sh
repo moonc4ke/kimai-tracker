@@ -1,16 +1,19 @@
 #!/bin/bash
 
+# Set the working directory to where the docker-compose.yml file is located
+cd /home/dondoncece/kimai-tracker
+
 # Load environment variables from .env file in the root directory
-if [ -f /home/dondoncece/kimai-tracker/.env ]; then
+if [ -f .env ]; then
     set -o allexport
-    source /home/dondoncece/kimai-tracker/.env
+    source .env
     set +o allexport
 else
     echo ".env file not found in the root directory."
     exit 1
 fi
 
-BACKUP_DIR="/home/dondoncece/kimai-tracker/backups"
+BACKUP_DIR="./backups"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 
 # Create backup directory if it doesn't exist
