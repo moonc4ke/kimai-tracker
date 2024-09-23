@@ -143,19 +143,19 @@ Add the following line to the crontab file to run the backup script every day at
 ## Step 5: Running Backup Scripts
 1\. **Run `backup.sh`**:
 ```sh
-sudo ~/kimai-tracker/backup-scripts/backup.sh
+sudo -E ~/kimai-tracker/backup-scripts/backup.sh
 ```
 This script creates a backup of the Kimai tracker and stores it in the `/backups` directory. It also removes backups older than 30 days.
 
 2\. **Run `list_backups.sh`**:
 ```sh
-sudo ~/kimai-tracker/backup-scripts/list_backups.sh
+~/kimai-tracker/backup-scripts/list_backups.sh
 ```
 This script lists all available backups in the `/backups` directory.
 
 3\. **Run `restore_backup.sh`**:
 ```sh
-sudo ~/kimai-tracker/backup-scripts/restore_backup.sh <backup-name>
+sudo -E ~/kimai-tracker/backup-scripts/restore_backup.sh <backup-name>
 ```
 Replace `<backup-name>` with the name of the backup file you want to restore. This script restores the specified backup.
 

@@ -2,7 +2,12 @@
 
 # Load environment variables from .env file in the root directory
 if [ -f ../.env ]; then
+    set -o allexport
     source ../.env
+    set -o allexport
+else
+    echo ".env file not found in the root directory."
+    exit 1
 fi
 
 BACKUP_DIR="/backups"

@@ -2,7 +2,12 @@
 
 # Load environment variables from .env file in the root directory
 if [ -f ../.env ]; then
+    set -o allexport
     source ../.env
+    set -o allexport
+else
+    echo ".env file not found in the root directory."
+    exit 1
 fi
 
 BACKUP_DIR="./backups"
@@ -13,6 +18,10 @@ mkdir -p "$BACKUP_DIR"
 
 # Backup database
 docker-compose exec -T sqldb mysqldump -u kimaiuser -p"$MYSQL_PASSWORD" kimai > "$BACKUP_DIR/kimai_db_$DATE.sql"
+if [ $? -ne 0 ]; then
+    echo "Database backup failed."
+    exit 1
+fi
 
 # Backup important files and directories
 docker cp kimai-tracker-kimai:/opt/kimai/.env "$BACKUP_DIR/env_$DATE"
