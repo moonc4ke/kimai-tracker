@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e  # Exit immediately if a command exits with a non-zero status.
+
 # Load environment variables from .env file in the root directory
 if [ -f /home/dondoncece/kimai-tracker/.env ]; then
     set -o allexport
@@ -26,50 +28,57 @@ if [ ! -f "$BACKUP_DIR/${BACKUP_NAME}.tar.gz" ]; then
     exit 1
 fi
 
+# Extract the date from the backup name
+DATE=$(echo $BACKUP_NAME | grep -oP '\d{4}-\d{2}-\d{2}_\d{2}-\d{2}-\d{2}')
+
+if [ -z "$DATE" ]; then
+    echo "Could not extract date from backup name. Expected format: kimai_backup_YYYY-MM-DD_HH-MM-SS"
+    exit 1
+fi
+
+# Create a temporary directory for extraction
+TEMP_DIR=$(mktemp -d)
+
 # Extract the backup
-tar -xzf "$BACKUP_DIR/${BACKUP_NAME}.tar.gz" -C "$BACKUP_DIR"
+tar -xzf "$BACKUP_DIR/${BACKUP_NAME}.tar.gz" -C "$TEMP_DIR"
 if [ $? -ne 0 ]; then
     echo "Failed to extract the backup file."
+    rm -rf "$TEMP_DIR"
     exit 1
 fi
 
 # Restore database using root user
-docker-compose exec -T sqldb mysql -u root -p"$DATABASE_ROOT_PASSWORD" < "$BACKUP_DIR/kimai_db_$DATE.sql"
-if [ $? -ne 0 ]; then
-    echo "Database restoration failed."
+if [ -f "$TEMP_DIR/kimai_db_$DATE.sql" ]; then
+    docker-compose exec -T sqldb mysql -u root -p"$DATABASE_ROOT_PASSWORD" < "$TEMP_DIR/kimai_db_$DATE.sql"
+else
+    echo "Database backup file not found in the extracted backup."
+    rm -rf "$TEMP_DIR"
     exit 1
 fi
 
 # Restore important files and directories
-docker cp "$BACKUP_DIR/env_$DATE" kimai-tracker-kimai:/opt/kimai/.env
-if [ $? -ne 0 ]; then
-    echo "Failed to restore .env file."
-    exit 1
+docker cp "$TEMP_DIR/env_$DATE" kimai-tracker-kimai:/opt/kimai/.env
+echo ".env file restored."
+
+if [ -f "$TEMP_DIR/local_yaml_$DATE" ]; then
+    docker cp "$TEMP_DIR/local_yaml_$DATE" kimai-tracker-kimai:/opt/kimai/config/packages/local.yaml
+    echo "local.yaml file restored."
+else
+    echo "local.yaml file not found in the backup, skipping."
 fi
 
-docker cp "$BACKUP_DIR/local_yaml_$DATE" kimai-tracker-kimai:/opt/kimai/config/packages/local.yaml
-if [ $? -ne 0 ]; then
-    echo "Failed to restore local.yaml file."
-    exit 1
-fi
-
-docker cp "$BACKUP_DIR/var_$DATE" kimai-tracker-kimai:/opt/kimai/
-if [ $? -ne 0 ]; then
-    echo "Failed to restore var directory."
-    exit 1
+if [ -d "$TEMP_DIR/var_$DATE" ]; then
+    docker cp "$TEMP_DIR/var_$DATE/." kimai-tracker-kimai:/opt/kimai/var/
+    echo "var directory restored."
+else
+    echo "var directory not found in the backup, skipping."
 fi
 
 # Clean up extracted files
-rm "$BACKUP_DIR/kimai_db_$DATE.sql" "$BACKUP_DIR/env_$DATE" "$BACKUP_DIR/local_yaml_$DATE"
-rm -rf "$BACKUP_DIR/var_$DATE"
+rm -rf "$TEMP_DIR"
 
 echo "Backup restoration completed."
 
 # Restart the Kimai container to apply changes
 docker-compose restart kimai
-if [ $? -ne 0 ]; then
-    echo "Failed to restart Kimai container."
-    exit 1
-fi
-
 echo "Kimai container restarted."
