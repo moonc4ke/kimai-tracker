@@ -155,7 +155,7 @@ This script lists all available backups in the `/backups` directory.
 
 3\. **Run `restore_backup.sh`**:
 ```sh
-sudo -E ~/kimai-tracker/backup-scripts/restore_backup.sh <backup-name>
+sudo -E ~/kimai-tracker/backup-scripts/restore_backup.sh <backup-name-with-full-path>
 ```
 Replace `<backup-name>` with the name of the backup file you want to restore. This script restores the specified backup.
 
