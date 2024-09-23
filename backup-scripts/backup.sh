@@ -1,16 +1,16 @@
 #!/bin/bash
 
 # Load environment variables from .env file in the root directory
-if [ -f ../.env ]; then
+if [ -f /home/dondoncece/kimai-tracker/.env ]; then
     set -o allexport
-    source ../.env
+    source /home/dondoncece/kimai-tracker/.env
     set -o allexport
 else
     echo ".env file not found in the root directory."
     exit 1
 fi
 
-BACKUP_DIR="./backups"
+BACKUP_DIR="/home/dondoncece/kimai-tracker/backups"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
 
 # Create backup directory if it doesn't exist
