@@ -39,8 +39,8 @@ fi
 # Create a temporary directory for extraction
 TEMP_DIR=$(mktemp -d)
 
-# Extract the backup
-tar -xzf "$BACKUP_DIR/${BACKUP_NAME}.tar.gz" -C "$TEMP_DIR"
+# Extract the backup, ignoring timestamp warnings
+tar --warning=no-timestamp -xzf "$BACKUP_DIR/${BACKUP_NAME}.tar.gz" -C "$TEMP_DIR"
 if [ $? -ne 0 ]; then
     echo "Failed to extract the backup file."
     rm -rf "$TEMP_DIR"
