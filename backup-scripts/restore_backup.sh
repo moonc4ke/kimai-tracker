@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Load environment variables from .env file in the root directory
+if [ -f ../.env ]; then
+    source ../.env
+fi
+
 BACKUP_DIR="/backups"
-COMPOSE_PROJECT_NAME="kimai"  # Adjust this to match your docker-compose project name
-MYSQL_PASSWORD="password"
 
 # Check if backup name is provided
 if [ $# -eq 0 ]; then
@@ -22,20 +25,20 @@ fi
 tar -xzf "$BACKUP_DIR/${BACKUP_NAME}.tar.gz" -C "$BACKUP_DIR"
 
 # Restore database
-docker-compose exec -T database mysql -u kimaiuser -p"$MYSQL_PASSWORD" kimai < "$BACKUP_DIR/kimai_db_"*".sql"
+docker-compose exec -T sqldb mysql -u kimaiuser -p"$MYSQL_PASSWORD" kimai < "$BACKUP_DIR/kimai_db_$DATE.sql"
 
 # Restore important files and directories
-docker cp "$BACKUP_DIR/env_"* ${COMPOSE_PROJECT_NAME}_app_1:/opt/kimai/.env
-docker cp "$BACKUP_DIR/local_yaml_"* ${COMPOSE_PROJECT_NAME}_app_1:/opt/kimai/config/packages/local.yaml
-docker cp "$BACKUP_DIR/var_"* ${COMPOSE_PROJECT_NAME}_app_1:/opt/kimai/
+docker cp "$BACKUP_DIR/env_$DATE" kimai-tracker-kimai:/opt/kimai/.env
+docker cp "$BACKUP_DIR/local_yaml_$DATE" kimai-tracker-kimai:/opt/kimai/config/packages/local.yaml
+docker cp "$BACKUP_DIR/var_$DATE" kimai-tracker-kimai:/opt/kimai/
 
 # Clean up extracted files
-rm "$BACKUP_DIR/kimai_db_"*".sql" "$BACKUP_DIR/env_"* "$BACKUP_DIR/local_yaml_"*
-rm -rf "$BACKUP_DIR/var_"*
+rm "$BACKUP_DIR/kimai_db_$DATE.sql" "$BACKUP_DIR/env_$DATE" "$BACKUP_DIR/local_yaml_$DATE"
+rm -rf "$BACKUP_DIR/var_$DATE"
 
 echo "Backup restoration completed."
 
 # Restart the Kimai container to apply changes
-docker-compose restart app
+docker-compose restart kimai
 
 echo "Kimai container restarted."

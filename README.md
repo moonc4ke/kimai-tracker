@@ -112,65 +112,50 @@ Check the Caddy service status:
 sudo systemctl status caddy
 ```
 
-## Step 4: Create Backup, List Backups, and Restore Scripts from backup-scripts folder
+## Step 4: Backups
 
-1\. **Create `backup.sh` in the `~/` directory**:
+1\. **Make the scripts executable in the kimai-tracker project directory**:
 ```sh
-sudo nano ~/backup.sh
+sudo chmod +x ./backups/backup.sh ./backups/list_backups.sh ./backups/restore_backup.sh
 ```
 
-2\. **Create `list_backups.sh` in the `~/` directory**:
+2.1\. **Create backups dir in the kimai-tracker project directory**:
 ```sh
-sudo nano ~/list_backups.sh
+sudo mkdir -p ./backups
 ```
 
-3\. **Create `restore_backup.sh` in the `~/` directory**:
+2.2\. **Change ownership and permissions of the ./backups directory in the kimai-tracker project directory**:
 ```sh
-sudo nano ~/restore_backup.sh
+sudo chown -R dondoncece:sudo ./backups
+sudo chmod -R 755 ./backups
 ```
 
-4\. **Make the scripts executable**:
-```sh
-sudo chmod +x ~/backup.sh ~/list_backups.sh ~/restore_backup.sh
-```
-
-4.1\. **Create backups dir**:
-```sh
-sudo mkdir -p /backups
-```
-
-4.2\. **Change ownership and permissions of the /backups directory**:
-```sh
-sudo chown -R dondoncece:sudo /backups
-sudo chmod -R 755 /backups
-```
-
-5\. **Set up a cron job for root user to run the backup script daily at night**:
+3\. **Set up a cron job for root user to run the backup script daily at night**:
 ```sh
 sudo crontab -e
 ```
 
 Add the following line to the crontab file to run the backup script every day at 2 AM:
 ```sh
-0 2 * * * /bin/bash /home/dondoncece/backup.sh
+0 2 * * * /bin/bash /home/dondoncece/kimai-tracker/backups/backup.sh
 ```
 
 ## Step 5: Running Backup Scripts
 1\. **Run `backup.sh`**:
 ```sh
-sudo ./backup.sh
+sudo ~/kimai-tracker/backups/backup.sh
 ```
 This script creates a backup of the Kimai tracker and stores it in the `/backups` directory. It also removes backups older than 30 days.
 
 2\. **Run `list_backups.sh`**:
 ```sh
-./list_backups.sh
+sudo ~/kimai-tracker/backups/list_backups.sh
 ```
 This script lists all available backups in the `/backups` directory.
 
 3\. **Run `restore_backup.sh`**:
 ```sh
-./restore_backup.sh <backup-name>
+sudo ~/kimai-tracker/backups/restore_backup.sh <backup-name>
 ```
 Replace `<backup-name>` with the name of the backup file you want to restore. This script restores the specified backup.
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BACKUP_DIR="/backups"
+BACKUP_DIR="./backups"
 
 echo "Available backups:"
 echo "----------------"

@@ -1,20 +1,23 @@
 #!/bin/bash
 
-BACKUP_DIR="/backups"
+# Load environment variables from .env file in the root directory
+if [ -f ../.env ]; then
+    source ../.env
+fi
+
+BACKUP_DIR="./backups"
 DATE=$(date +%Y-%m-%d_%H-%M-%S)
-COMPOSE_PROJECT_NAME="kimai"  # Adjust this to match your docker-compose project name
-MYSQL_PASSWORD="password"
 
 # Create backup directory if it doesn't exist
 mkdir -p "$BACKUP_DIR"
 
 # Backup database
-docker-compose exec -T database mysqldump -u kimaiuser -p"$MYSQL_PASSWORD" kimai > "$BACKUP_DIR/kimai_db_$DATE.sql"
+docker-compose exec -T sqldb mysqldump -u kimaiuser -p"$MYSQL_PASSWORD" kimai > "$BACKUP_DIR/kimai_db_$DATE.sql"
 
 # Backup important files and directories
-docker cp ${COMPOSE_PROJECT_NAME}_app_1:/opt/kimai/.env "$BACKUP_DIR/env_$DATE"
-docker cp ${COMPOSE_PROJECT_NAME}_app_1:/opt/kimai/config/packages/local.yaml "$BACKUP_DIR/local_yaml_$DATE"
-docker cp ${COMPOSE_PROJECT_NAME}_app_1:/opt/kimai/var "$BACKUP_DIR/var_$DATE"
+docker cp kimai-tracker-kimai:/opt/kimai/.env "$BACKUP_DIR/env_$DATE"
+docker cp kimai-tracker-kimai:/opt/kimai/config/packages/local.yaml "$BACKUP_DIR/local_yaml_$DATE"
+docker cp kimai-tracker-kimai:/opt/kimai/var "$BACKUP_DIR/var_$DATE"
 
 # Create a tarball of the backups
 tar -czf "$BACKUP_DIR/kimai_backup_$DATE.tar.gz" -C "$BACKUP_DIR" \

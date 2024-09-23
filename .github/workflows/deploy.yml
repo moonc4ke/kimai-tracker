@@ -43,7 +43,19 @@ jobs:
               cd kimai-tracker
             fi
 
-      - name: Run Docker Compose with Secrets
+      - name: Create .env file with Secrets
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.UBUNTU_SERVER_IP }}
+          username: dondoncece
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/kimai-tracker
+            cat <<EOF > .env
+            MYSQL_PASSWORD=${{ secrets.DATABASE_PASSWORD }}
+            EOF
+
+      - name: Run Docker Compose with .env file
         uses: appleboy/ssh-action@v0.1.5
         with:
           host: ${{ secrets.UBUNTU_SERVER_IP }}
