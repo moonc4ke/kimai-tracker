@@ -116,7 +116,7 @@ sudo systemctl status caddy
 
 1\. **Make the scripts executable in the kimai-tracker project directory**:
 ```sh
-sudo chmod +x ./backups/backup.sh ./backups/list_backups.sh ./backups/restore_backup.sh
+sudo chmod +x ./backup-scripts/backup.sh ./backup-scripts/list_backups.sh ./backup-scripts/restore_backup.sh
 ```
 
 2.1\. **Create backups dir in the kimai-tracker project directory**:
@@ -137,25 +137,25 @@ sudo crontab -e
 
 Add the following line to the crontab file to run the backup script every day at 2 AM:
 ```sh
-0 2 * * * /bin/bash /home/dondoncece/kimai-tracker/backups/backup.sh
+0 2 * * * /bin/bash /home/dondoncece/kimai-tracker/backup-scripts/backup.sh
 ```
 
 ## Step 5: Running Backup Scripts
 1\. **Run `backup.sh`**:
 ```sh
-sudo ~/kimai-tracker/backups/backup.sh
+sudo ~/kimai-tracker/backup-scripts/backup.sh
 ```
 This script creates a backup of the Kimai tracker and stores it in the `/backups` directory. It also removes backups older than 30 days.
 
 2\. **Run `list_backups.sh`**:
 ```sh
-sudo ~/kimai-tracker/backups/list_backups.sh
+sudo ~/kimai-tracker/backup-scripts/list_backups.sh
 ```
 This script lists all available backups in the `/backups` directory.
 
 3\. **Run `restore_backup.sh`**:
 ```sh
-sudo ~/kimai-tracker/backups/restore_backup.sh <backup-name>
+sudo ~/kimai-tracker/backup-scripts/restore_backup.sh <backup-name>
 ```
 Replace `<backup-name>` with the name of the backup file you want to restore. This script restores the specified backup.
 
