@@ -85,7 +85,7 @@ sudo apt install -y caddy
 ### Configure Caddy
 
 ```sh
-sudo nano /etc/caddy/Caddyfile
+sudo vim /etc/caddy/Caddyfile
 ```
 
 Add the following configuration:
