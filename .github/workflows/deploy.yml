@@ -70,14 +70,3 @@ jobs:
             cd ~/kimai-tracker
             docker-compose down
             docker-compose up -d
-
-      - name: Prune Unused Docker Objects
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.UBUNTU_SERVER_IP }}
-          username: dondoncece
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker container prune -f
-            docker image prune -a -f
-            docker volume prune -f
