@@ -167,10 +167,10 @@ Replace `<backup-name>` with the name of the backup file you want to restore. Th
 - Add the following secrets:
 - `SSH_PRIVATE_KEY`: Your private SSH key.
 - `UBUNTU_SERVER_IP`: Your Ubuntu Server IP address.
-- `DATABASE_NAME`: The name of your MongoDB database.
-- `DATABASE_USER`: The username for your MongoDB database.
-- `DATABASE_PASSWORD`: The password for your MongoDB database user.
-- `DATABASE_ROOT_PASSWORD`: The root password for your MongoDB instance.
+- `DATABASE_NAME`: The name of your database.
+- `DATABASE_USER`: The username for your database.
+- `DATABASE_PASSWORD`: The password for your database user.
+- `DATABASE_ROOT_PASSWORD`: The root password for your instance.
 - `ADMIN_EMAIL`: The email address for the admin user of your application.
 - `ADMIN_PASSWORD`: The password for the admin user of your application.
 
