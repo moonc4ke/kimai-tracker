@@ -182,26 +182,3 @@ These secrets are used in the GitHub Actions workflow to securely deploy your ap
 ```sh
 docker service ls
 ```
-
-## Step 7: Install Yacht
-
-Install Yacht via Docker https://github.com/SelfhostedPro/Yacht
-
-You must use selfhostedpro/yacht:devel
-```sh
-docker volume create yacht
-docker run -d --name yacht -p 8000:8000 --restart unless-stopped -v /var/run/docker.sock:/var/run/docker.sock -v yacht:/config selfhostedpro/yacht:devel
-```
-
-Now you can access Yacht via UBUNTU_SERVER_IP_ADDRESS:8000
-
-After installing Yacht change admin@yacht.local password
-
-### Summary
-
-1\. **Install Docker** on your Ubuntu Server.
-2\. **Generate an SSH key pair and add the public key to your GitHub account**.
-3\. **Create backup, list backups, and restore backup scripts** and set up a cron job for daily backups.
-4\. **Run backup scripts** to manage Kimai backups.
-5\. **Update GitHub Actions Workflow** to handle the deployment process.
-6\. **Install Yacht - Docker Container Management UI**.
