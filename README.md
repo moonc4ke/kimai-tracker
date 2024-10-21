@@ -137,7 +137,7 @@ sudo crontab -e
 
 Add the following line to the crontab file to run the backup script every day at 2 AM:
 ```sh
-0 2 * * * /bin/bash /home/dondoncece/kimai-tracker/backup-scripts/backup.sh
+0 2 * * * cd /home/dondoncece/kimai-tracker && /bin/bash backup-scripts/backup.sh > /home/dondoncece/logs/kimai-backup.log 2>&1
 ```
 
 ## Step 5: Running Backup Scripts
