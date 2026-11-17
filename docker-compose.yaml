@@ -24,7 +24,7 @@ services:
 
   kimai:
     container_name: kimai-tracker-kimai
-    image: kimai/kimai2:2.71.0
+    image: kimai/kimai2:2.72.0
     volumes:
       - data:/opt/kimai/var/data
     ports:
